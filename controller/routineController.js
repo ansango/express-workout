@@ -19,9 +19,17 @@ const getRoutines = async (req, res) => {
 
 const createRoutine = async (req, res) => {
   const newRoutine = new Routine(req.body);
+  const routines = await Routine.find({});
+  const routineCreated = routines.find(
+    (routine) => routine.name === newRoutine.name
+  );
   try {
-    const savedRoutine = await newRoutine.save();
-    response.success(res, savedRoutine);
+    if (routineCreated) {
+      response.badrequest(res, "routine already exists");
+    } else {
+      const savedRoutine = await newRoutine.save();
+      response.success(res, savedRoutine);
+    }
   } catch (err) {
     response.error(err);
   }
