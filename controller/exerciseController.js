@@ -16,17 +16,14 @@ const getExercises = async (req, res) => {
 };
 
 const createExercise = async (req, res) => {
-  const newExercise = new Exercise(req.body);
-  const exercises = await Exercise.find({});
-  const exerciseCreated = exercises.find(
-    (exercise) => exercise.name === newExercise.name
-  );
   try {
-    if (exerciseCreated) {
-      response.badrequest(res, "exercise already exists");
-    } else {
+    const exercise = await Exercise.findOne({ name: req.body.name });
+    if (!exercise) {
+      const newExercise = new Exercise(req.body);
       const savedExercise = await newExercise.save();
       response.success(res, savedExercise);
+    } else {
+      response.badrequest(res, "exercise already exists");
     }
   } catch (err) {
     response.error(err);

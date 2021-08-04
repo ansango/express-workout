@@ -18,17 +18,14 @@ const getRoutines = async (req, res) => {
 };
 
 const createRoutine = async (req, res) => {
-  const newRoutine = new Routine(req.body);
-  const routines = await Routine.find({});
-  const routineCreated = routines.find(
-    (routine) => routine.name === newRoutine.name
-  );
   try {
-    if (routineCreated) {
-      response.badrequest(res, "routine already exists");
-    } else {
+    const routine = await Routine.findOne({ name: req.body.name });
+    if (!routine) {
+      const newRoutine = new Routine(req.body);
       const savedRoutine = await newRoutine.save();
       response.success(res, savedRoutine);
+    } else {
+      response.badrequest(res, "routine already exists");
     }
   } catch (err) {
     response.error(err);
