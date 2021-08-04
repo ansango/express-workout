@@ -18,4 +18,11 @@ router.post("/exercise", controller.createExercise);
 router.get("/routines", controller.getRoutines);
 router.post("/routine", controller.createRoutine);
 
+/**
+ *  * User
+ */
+
+router.post("/auth/register", controller.registerUser);
+router.post("/auth/login", controller.loginUser);
+
 module.exports = router;
